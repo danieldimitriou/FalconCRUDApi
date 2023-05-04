@@ -14,3 +14,5 @@ users = UserResource(db)
 #add the users resource as a route
 app.add_route('/users', users)
 app.add_route('/users/{id}', users)
+
+
