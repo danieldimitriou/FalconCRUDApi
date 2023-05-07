@@ -1,6 +1,6 @@
 import json
 import falcon
-from FalconCRUDApi.models import User, UserType
+from falconcrudapi.models import User, UserType
 
 class UserResource:
     def __init__(self, user_repository):

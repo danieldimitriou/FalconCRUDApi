@@ -1,14 +1,15 @@
 import falcon
 from tinydb import TinyDB
-from FalconCRUDApi.user_resource import UserResource
-from FalconCRUDApi.user_repository import user_repository
+from falconcrudapi.user_resource import UserResource
+from falconcrudapi.user_repository import user_repository
+import os
 
 #create the Falcon app instance
 app = application = falcon.App()
 
 #create a DB instance & users table
-db = TinyDB('userDB.json')
-users_table = db.table('users')
+db = TinyDB(os.environ.get("DB_NAME"))
+users_table = db.table(os.environ.get("TABLE_NAME"))
 
 #create the repository and pass the users_table as a parameter for the queries
 repository = user_repository(users_table)
