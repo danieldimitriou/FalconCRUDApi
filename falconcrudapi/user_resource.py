@@ -1,6 +1,7 @@
 import json
 import falcon
 from falconcrudapi.models import User, UserType
+from falconcrudapi.utils import validate_json_fields
 
 class UserResource:
     def __init__(self, user_repository):
@@ -8,12 +9,8 @@ class UserResource:
         
     @staticmethod    
     def on_post_validation(req, resp, resource, params):
-        try:
-             user_data = User(req.media["name"], req.media["type"])
-        except:
-            message = "Bad JSON file. Please make sure it is of the correct format. It should include only the name and type of the user."
-            raise falcon.HTTPBadRequest(title='Bad request', description=message)
-        
+        #check that the request's body includes only the fields name and type
+        user_data = validate_json_fields(req.media)
         #check that the user's name does not have any numbers or characters. If it does, return error resposne 400.
         if not user_data.name.isalpha():
             message = "Invalid data. User name must not include any numbers."
@@ -45,19 +42,14 @@ class UserResource:
    
     @staticmethod    
     def on_put_validation(req, resp, resource, params):
+        #check that the request's body includes only the fields name and type
+        updated_user_data = validate_json_fields(req.media)
         #check if a user id is provided in the uri
         user_id = params.get('id')
         if not user_id:
             message = "User ID is missing in the URI."
             raise falcon.HTTPBadRequest(title='Bad request', description=message)
-        
-        #check if the data includes the correct fields(name & type) and validate the data
-        try:
-            updated_user_data = User(req.media["name"], req.media["type"])
-        except:
-            message = "Missing or misspelled user fields. Please make sure it is of the correct format. It should only include 2 fields: name and type."
-            raise falcon.HTTPBadRequest(title='Bad request', description=message)
-        
+                
         #check that the user's name does not have any numbers or characters. If it does, return error resposne 400.
         if not updated_user_data.name.isalpha():
             message = "Invalid data. User name must not include any numbers."
@@ -126,7 +118,7 @@ class UserResource:
         except Exception as e:
             raise falcon.HTTP_INTERNAL_SERVER_ERROR(title = "An error has occured.", description = e)
 
-        #Response status code 200 - No content
+        #Response status code 200 - OK
         resp.status = falcon.HTTP_OK
         message = f"User with ID: {id} has been updated successfully."
         resp.text = json.dumps({"message": message})       
@@ -137,8 +129,7 @@ class UserResource:
             self.user_repository.delete_user(int(id))
         except Exception as e:
             raise falcon.HTTP_INTERNAL_SERVER_ERROR(title = "An error has occured.", description = e)
-
-        #Response status code 204 - No content
-        resp.status = falcon.HTTP_204
-        
-
+        #Response status code 200 - OK
+        resp.status = falcon.HTTP_200
+        message = f"User with ID:{id} has been deleted successfully."
+        resp.text = json.dumps({"message":message})
