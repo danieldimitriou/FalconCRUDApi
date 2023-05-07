@@ -1,22 +1,31 @@
 #This module is responsible for the database operations.
 from tinydb import Query 
-import falcon
 
-def get_user_by_id(db, user_id):
-    return db.get(doc_id=int(user_id))
+class user_repository:
+    def __init__(self, table):
+        self.table = table
 
-def get_all_users(db):
-    # all_users =  db.all()
-    # print(all_users)
-    return db.all()
+    def get_user_by_id(self, user_id):
+        return self.table.get(doc_id=int(user_id))
 
-def save_user(db, user, resp):
-    return db.insert(user.serialize())
+    def get_all_users(self):
+        return self.table.all()
 
+    def save_user(self, user):
+        return self.table.insert(user)
 
-#return True if user exists, false & http error code if user doesn't exist.
-def check_if_user_exists(db, user):
-    user_query = Query()
-    if db.contains((user_query.name == user.name) & (user_query.type == user.type)):
-        return True
-    return False
+    def update_user(self, user_id, updated_user_data):
+        user_query = Query()
+        # Use doc_ids parameter to specify the document(s) to update
+        return self.table.update(updated_user_data, doc_ids=[user_id])
+
+    def delete_user(self, user_id):
+        return self.table.remove(doc_ids = [user_id])
+    
+    # return True if user exists, false if user doesn't exist.
+    # Supposes that the users have unique names.
+    def check_if_user_exists_by_name(self, user):
+        user_query = Query()
+        if self.table.contains(user_query.name == user["name"]):
+            return True
+        return False
