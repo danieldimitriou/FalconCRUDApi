@@ -95,7 +95,7 @@ class UserResource:
         message = "User created successfully."
         resp.status = falcon.HTTP_CREATED
         resp.text = json.dumps({"message": message, "User ID": user_id})
-        # #set the route for this user using their id for future reference.
+        #set the route for this user using their id for future reference.
         resp.location = f'/users/{user_id}'          
     
     @falcon.before(on_get_validation)
@@ -103,12 +103,12 @@ class UserResource:
         #check if there is a document/user ID provided with the request and try to retrieve their data.  
         if(id):
             user_data = req.context["user_data"]
-        #     #add the user to the body of the response as a json/python string       
+            #add the user to the body of the response as a json/python string       
             resp.text = json.dumps(user_data, ensure_ascii=False)
-        #     #Response status code 200 - OK
+            #Response status code 200 - OK
             resp.status = falcon.HTTP_OK
             return
-        # #if there is no id, fetch all users from the database and return them in the response
+        #if there is no id, fetch all users from the database and return them in the response
         else:
             try:
                 all_users = self.user_repository.get_all_users()

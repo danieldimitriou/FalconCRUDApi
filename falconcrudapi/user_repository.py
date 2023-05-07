@@ -16,7 +16,6 @@ class user_repository:
 
     def update_user(self, user_id, updated_user_data):
         user_query = Query()
-        # Use doc_ids parameter to specify the document(s) to update
         return self.table.update(updated_user_data, doc_ids=[user_id])
 
     def delete_user(self, user_id):
