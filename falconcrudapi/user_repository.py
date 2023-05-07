@@ -15,7 +15,6 @@ class user_repository:
         return self.table.insert(user)
 
     def update_user(self, user_id, updated_user_data):
-        user_query = Query()
         return self.table.update(updated_user_data, doc_ids=[user_id])
 
     def delete_user(self, user_id):
