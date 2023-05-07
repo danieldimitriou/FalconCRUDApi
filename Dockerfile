@@ -1,7 +1,7 @@
 FROM python:3.11.1
 
-ENV DB_NAME = userDB.json
-ENV TABLE_NAME = users
+ENV DB_NAME=userDB.json
+ENV TABLE_NAME=users
 
 WORKDIR /falconcrudapi/falconcrudapi
 
