@@ -1,6 +1,6 @@
 import falcon
-from tinydb import TinyDB, Query
-from .users import UserResource
+from tinydb import TinyDB
+from .user_resource import UserResource
 
 
 #create the Falcon app instance
